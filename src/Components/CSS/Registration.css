@@ -1,0 +1,15 @@
+.text-muted{
+    color: crimson;
+}
+.registration{
+    margin-left: auto;
+    margin-right: auto;
+    width: 15em;
+    margin-top: 10em;
+}
+.registration-title{
+    font-family: "Corbel Light", Arial, serif;
+}
+.registration-reset{
+    margin-left: 20px;
+}

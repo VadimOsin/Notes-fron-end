@@ -1,0 +1,9 @@
+.listItems {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2em;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}

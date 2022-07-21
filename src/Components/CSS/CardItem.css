@@ -1,0 +1,18 @@
+.cardItem {
+    width: 23em;
+    min-height: 20em;
+    margin: 10px;
+}
+
+.cardItem-delete,
+.cardItem-edit{
+    width: 5em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+
+
+.cardItem-form {
+    display: flex;
+    justify-content: end;
+}
