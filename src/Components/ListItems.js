@@ -9,14 +9,17 @@ import ModalWindow from "./Modal";
 import {store} from "../store/store";
 import {putPost, getPost, deletePost} from '../store/actionCreators/postActionCreator'
 import {useDispatch} from "react-redux";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 const ListItems = ({post}) => {
-        const {user, setUser} = useContext(userContext)
-        const dispatch = useDispatch();
         const [show, setShow] = useState(false);
         const [tempPost, setTempPost] = useState({
             id: '', title: '', content: ''
         })
+        const [query, setQuery] = useState("")
+        const {user} = useContext(userContext)
+        const dispatch = useDispatch();
         const onChange = ({target: {name, value}}) => {
             setTempPost({...tempPost, [name]: value})
         };
@@ -33,6 +36,7 @@ const ListItems = ({post}) => {
             })
 
         };
+
         useEffect(() => {
             axios({
                 method: 'get', url: `http://localhost:8080/api/post?id=${user.id}`,
@@ -42,34 +46,31 @@ const ListItems = ({post}) => {
         }, []);
 
         const deleteHandler = (id) => {
-            // axios({
-            //     method: 'delete', url: `http://localhost:8080/api/post/${id}`,
-            // }).then(() => {
-            //     dispatch(deletePost(id))
-            // }).catch(() => {
-            //     alert("Post delete error")
-            // })
-            dispatch(deletePost(id))
+            axios({
+                method: 'delete', url: `http://localhost:8080/api/post/${id}`,
+            }).then(() => {
+                dispatch(deletePost(id))
+            }).catch(() => {
+                alert("Post delete error")
+            })
         }
 
         const putHandler = () => {
             post.map((i) => {
                 if (i.id === tempPost.id) {
                     if (i.title !== tempPost.title || i.content !== tempPost.content) {
-                        // axios({
-                        //     method: 'put', url: `http://localhost:8080/api/post`,
-                        //     data: {
-                        //         id: tempPost.id,
-                        //         title: tempPost.title,
-                        //         content: tempPost.content
-                        //     }
-                        // }).then(() => {
-                        //     store.dispatch(putPost(tempPost))
-                        // }).catch(() => {
-                        //     alert("Post update error")
-                        // })
-
-                        store.dispatch(putPost(tempPost))
+                        axios({
+                            method: 'put', url: `http://localhost:8080/api/post`,
+                            data: {
+                                id: tempPost.id,
+                                title: tempPost.title,
+                                content: tempPost.content
+                            }
+                        }).then(() => {
+                            store.dispatch(putPost(tempPost))
+                        }).catch(() => {
+                            alert("Post update error")
+                        })
                     }
                 }
             })
@@ -79,8 +80,23 @@ const ListItems = ({post}) => {
         {
             if (post.length) {
                 return (<>
+                    <Form className="d-flex listItems-search">
+                        <Form.Control
+                            type="search"
+                            placeholder="Search"
+                            aria-label="Search"
+                            onChange={event => setQuery(event.target.value)}
+                        />
+                        <Button variant="outline-success" className="listItems-search-btn">Search</Button>
+                    </Form>
                     <div className="listItems">
-                        {post.map((item) => {
+                        {post.filter(item => {
+                            if (query === '') {
+                                return item;
+                            } else if (item.title.toLowerCase().includes(query.toLowerCase())) {
+                                return item;
+                            }
+                        }).map((item) => {
                             return <CardItem key={item.id} post={item}
                                              deleteHandler={deleteHandler} handleShow={handleShow}/>
                         })}
