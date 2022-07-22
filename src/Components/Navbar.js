@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 const NavbarHome = () => {
     const {user, setUser} = useContext(userContext)
     return (
-        <Navbar bg="dark" expand="lg">
+        <Navbar bg="secondary" >
             <Container fluid>
                 <Navbar.Brand href="#">Notes</Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll"/>

@@ -11,6 +11,7 @@ import {putPost, getPost, deletePost} from '../store/actionCreators/postActionCr
 import {useDispatch} from "react-redux";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import {PATH} from "../config/config";
 
 const ListItems = ({post}) => {
         const [show, setShow] = useState(false);
@@ -39,7 +40,7 @@ const ListItems = ({post}) => {
 
         useEffect(() => {
             axios({
-                method: 'get', url: `http://localhost:8080/api/post?id=${user.id}`,
+                method: 'get', url: `${PATH}/post?id=${user.id}`,
             }).then(function (response) {
                 dispatch(getPost(response.data))
             });
@@ -47,7 +48,7 @@ const ListItems = ({post}) => {
 
         const deleteHandler = (id) => {
             axios({
-                method: 'delete', url: `http://localhost:8080/api/post/${id}`,
+                method: 'delete', url: `${PATH}/post/${id}`,
             }).then(() => {
                 dispatch(deletePost(id))
             }).catch(() => {
@@ -60,7 +61,7 @@ const ListItems = ({post}) => {
                 if (i.id === tempPost.id) {
                     if (i.title !== tempPost.title || i.content !== tempPost.content) {
                         axios({
-                            method: 'put', url: `http://localhost:8080/api/post`,
+                            method: 'put', url: `${PATH}/post`,
                             data: {
                                 id: tempPost.id,
                                 title: tempPost.title,

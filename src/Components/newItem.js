@@ -6,6 +6,7 @@ import ModalWindow from "./Modal";
 import axios from "axios";
 import {useDispatch} from "react-redux";
 import {addPost} from "../store/actionCreators/postActionCreator";
+import {PATH} from "../config/config";
 
 const NewItem = () => {
     const dispatch = useDispatch()
@@ -22,7 +23,7 @@ const NewItem = () => {
     const addNewPost = () => {
         axios({
             method: 'post',
-            url: 'http://localhost:8080/api/post',
+            url: `${PATH}/post`,
             data: {
                 "title": newPost.title,
                 "content": newPost.content,
