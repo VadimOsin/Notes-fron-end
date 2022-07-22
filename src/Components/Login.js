@@ -5,7 +5,7 @@ import './CSS/Login.css'
 import {useContext, useState} from "react";
 import axios from "axios";
 import {userContext} from "../context/userContext";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 
 function Login() {
@@ -61,10 +61,14 @@ function Login() {
                               value={log.password}
                               onChange={onChange}/>
             </Form.Group>
-
-            <Button variant="primary" type="submit">
-                Submit
-            </Button>
+            <div className="login-footer">
+                <Button variant="primary" type="submit">
+                    Submit
+                </Button>
+                <Form.Text id="passwordHelpBlock" muted className="login-linkReg">
+                    <Link to="/registration">Registration</Link>
+                </Form.Text>
+            </div>
         </Form>
     );
 }

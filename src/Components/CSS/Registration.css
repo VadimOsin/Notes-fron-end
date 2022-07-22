@@ -13,3 +13,10 @@
 .registration-reset{
     margin-left: 20px;
 }
+.registration-footer{
+    display: flex;
+}
+.registration-linkLogin{
+    margin-left: 1em;
+    margin-top: 10px
+}
