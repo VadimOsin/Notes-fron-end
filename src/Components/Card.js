@@ -3,14 +3,10 @@ import Card from 'react-bootstrap/Card';
 import Button from "react-bootstrap/Button";
 import './CSS/CardItem.css'
 import {Form} from "react-bootstrap";
-import {Modal} from "./Modal";
 
-const CardItem = ({title,content}) => {
-    const [isModal, setModal] = useState(false);
-    const closeModal = (event) => {
-        event.preventDefault();
-        setModal(true)
-    }
+
+const CardItem = ({title, content,deleteHandler,id,handleShow}) => {
+
     return (
         <Card className="cardItem">
             <Card.Body>
@@ -20,21 +16,17 @@ const CardItem = ({title,content}) => {
                 </Card.Text>
             </Card.Body>
             <Form className="cardItem-form">
-                <Button variant="outline-success" type="submit" className="cardItem-edit"
-                        id="edit" onClick={closeModal}>
+                <Button variant="outline-success"  className="cardItem-edit"
+                        id="edit"
+                onClick={()=>handleShow(id)}>
                     Edit
                 </Button>
-                {/*<Modal*/}
-                {/*    isVisible={isModal}*/}
-                {/*    title="Modal Title"*/}
-                {/*    content={<p>Add your content here</p>}*/}
-                {/*    onClose={() => setModal(false)}*/}
-                {/*    btnTitle="Edit"*/}
-                {/*/>*/}
-                <Button variant="outline-danger" className="cardItem-delete">
+                <Button variant="outline-danger" className="cardItem-delete"
+                onClick={()=>deleteHandler(id)}>
                     Delete
                 </Button>
             </Form>
+
         </Card>
     );
 };

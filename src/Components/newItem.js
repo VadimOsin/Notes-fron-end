@@ -5,33 +5,33 @@ import {userContext} from "../context/userContext";
 import ModalWindow from "./Modal";
 import axios from "axios";
 
-const NewItem = ({setMountRender, isMountRender}) => {
+const NewItem = ({savePost}) => {
     const {user} = useContext(userContext)
-    const handleShow = () => setShow(true);
     const [show, setShow] = useState(false);
-    const [post, setPost] = useState({
+    const handleShow = () => setShow(true);
+    const [tempNewPost, setTempNewPost] = useState({
         title: '',
         content: ''
     })
     const onChange = ({target: {name, value}}) => {
-        setPost({...post, [name]: value})
+        setTempNewPost({...tempNewPost, [name]: value})
     };
     const handleEdit = () => {
         axios({
             method: 'post',
             url: 'http://localhost:8080/api/post',
             data: {
-                "title": post.title,
-                "content": post.content,
+                "title": tempNewPost.title,
+                "content": tempNewPost.content,
                 "userId": user.id
             }
+        }).then((response) => {
+            savePost(response)
+        }).catch((error) => {
+            alert("Create new post Error" + error)
         })
-        if (isMountRender) {
-            setMountRender(false)
-        } else {
-            setMountRender(true)
-        }
-        setPost({
+
+        setTempNewPost({
             title: '',
             content: ''
         })
@@ -40,7 +40,7 @@ const NewItem = ({setMountRender, isMountRender}) => {
     return (
         <div className="newItem">
             <Button variant="primary" className="newItem-add" onClick={handleShow}>+</Button>
-            <ModalWindow show={show} setShow={setShow} content={post.content} post={post} title={post.title}
+            <ModalWindow show={show} setShow={setShow} content={tempNewPost.content} post={tempNewPost}
                          btnTitle={"Add"} onChange={onChange} handleEdit={handleEdit}/>
 
         </div>
