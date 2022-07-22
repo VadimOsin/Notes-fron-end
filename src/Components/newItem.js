@@ -20,33 +20,28 @@ const NewItem = () => {
         setNewPost({...newPost, [name]: value})
     };
     const addNewPost = () => {
-        // axios({
-        //     method: 'post',
-        //     url: 'http://localhost:8080/api/post',
-        //     data: {
-        //         "title": newPost.title,
-        //         "content": newPost.content,
-        //         "userId": user.id
-        //     }
-        // }).then((response) => {
-        //     dispatch(addPost({
-        //         id: response.data.id,
-        //         title: response.data.title,
-        //         content: response.data.content
-        //     }))
-        // }).catch((error) => {
-        //     alert("Create new post Error" + error)
-        // })
-        // setNewPost({
-        //     title: '',
-        //     content: ''
-        // })
-        // setShow(false)
-        dispatch(addPost({
-            id: Date.now(),
-            title: newPost.title,
-            content: newPost.content
-        }))
+        axios({
+            method: 'post',
+            url: 'http://localhost:8080/api/post',
+            data: {
+                "title": newPost.title,
+                "content": newPost.content,
+                "userId": user.id
+            }
+        }).then((response) => {
+            dispatch(addPost({
+                id: response.data.id,
+                title: response.data.title,
+                content: response.data.content
+            }))
+        }).catch((error) => {
+            alert("Create new post Error" + error)
+        })
+        setNewPost({
+            title: '',
+            content: ''
+        })
+        setShow(false)
     }
     return (
         <div className="newItem">
