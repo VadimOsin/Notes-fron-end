@@ -34,4 +34,3 @@ export function deletePost(id) {
         payload:{id}
     };
 }
-

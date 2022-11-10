@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-const ModalWindow = ({show, setShow, btnTitle, post, handleEdit, onChange}) => {
+const ModalWindow = ({show, setShow, btnTitle,post, handleEdit, onChange}) => {
 
     const handleClose = () => setShow(false);
 

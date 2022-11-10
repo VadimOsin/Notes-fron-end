@@ -1,3 +1,0 @@
-const secret={
-    secret:"lfksjubgshvki"
-}

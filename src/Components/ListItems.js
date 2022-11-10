@@ -7,11 +7,11 @@ import {useState} from "react";
 import './CSS/ListItems.css'
 import ModalWindow from "./Modal";
 import {store} from "../store/store";
-import {putPost, getPost, deletePost} from '../store/actionCreators/postActionCreator'
+import {putPost, getPost, deletePost} from '../store/actionCreators/postActionsCreator'
 import {useDispatch} from "react-redux";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {PATH} from "../config/config";
+
 
 const ListItems = ({post}) => {
         const [show, setShow] = useState(false);
@@ -40,7 +40,7 @@ const ListItems = ({post}) => {
 
         useEffect(() => {
             axios({
-                method: 'get', url: `${PATH}/post?id=${user.id}`,
+                method: 'get', url: `${process.env.REACT_APP_API_URL}/post?id=${user.id}`,
             }).then(function (response) {
                 dispatch(getPost(response.data))
             });
@@ -48,7 +48,7 @@ const ListItems = ({post}) => {
 
         const deleteHandler = (id) => {
             axios({
-                method: 'delete', url: `${PATH}/post/${id}`,
+                method: 'delete', url: `${process.env.REACT_APP_API_URL}/post/${id}`,
             }).then(() => {
                 dispatch(deletePost(id))
             }).catch(() => {
@@ -61,7 +61,7 @@ const ListItems = ({post}) => {
                 if (i.id === tempPost.id) {
                     if (i.title !== tempPost.title || i.content !== tempPost.content) {
                         axios({
-                            method: 'put', url: `${PATH}/post`,
+                            method: 'put', url: `${process.env.REACT_APP_API_URL}/post`,
                             data: {
                                 id: tempPost.id,
                                 title: tempPost.title,

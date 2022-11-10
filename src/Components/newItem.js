@@ -5,8 +5,8 @@ import {userContext} from "../context/userContext";
 import ModalWindow from "./Modal";
 import axios from "axios";
 import {useDispatch} from "react-redux";
-import {addPost} from "../store/actionCreators/postActionCreator";
-import {PATH} from "../config/config";
+import {addPost} from "../store/actionCreators/postActionsCreator";
+
 
 const NewItem = () => {
     const dispatch = useDispatch()
@@ -23,7 +23,7 @@ const NewItem = () => {
     const addNewPost = () => {
         axios({
             method: 'post',
-            url: `${PATH}/post`,
+            url: `${process.env.REACT_APP_API_URL}/post`,
             data: {
                 "title": newPost.title,
                 "content": newPost.content,
