@@ -9,7 +9,6 @@ const Notes = () => {
     return (
         <div>
             <ListItems post={post}/>
-            <NewItem/>
         </div>
     );
 };

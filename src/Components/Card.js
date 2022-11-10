@@ -1,27 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from "react-bootstrap/Button";
 import './CSS/CardItem.css'
 import {Form} from "react-bootstrap";
 
-const CardItem = ({deleteHandler,handleShow,post}) => {
+
+const CardItem = ({title, content,deleteHandler,id,handleShow}) => {
 
     return (
         <Card className="cardItem">
             <Card.Body>
-                <Card.Title className="cardItem-title">{post.title}</Card.Title>
+                <Card.Title className="cardItem-title">{title}</Card.Title>
                 <Card.Text>
-                    {post.content}
+                    {content}
                 </Card.Text>
             </Card.Body>
             <Form className="cardItem-form">
                 <Button variant="outline-success"  className="cardItem-edit"
                         id="edit"
-                onClick={()=>handleShow(post.id)}>
+                onClick={()=>handleShow(id)}>
                     Edit
                 </Button>
                 <Button variant="outline-danger" className="cardItem-delete"
-                onClick={()=>deleteHandler(post.id)}>
+                onClick={()=>deleteHandler(id)}>
                     Delete
                 </Button>
             </Form>

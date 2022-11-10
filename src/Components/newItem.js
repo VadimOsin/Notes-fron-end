@@ -4,41 +4,34 @@ import Button from 'react-bootstrap/Button';
 import {userContext} from "../context/userContext";
 import ModalWindow from "./Modal";
 import axios from "axios";
-import {useDispatch} from "react-redux";
-import {addPost} from "../store/actionCreators/postActionsCreator";
 
-
-const NewItem = () => {
-    const dispatch = useDispatch()
+const NewItem = ({savePost}) => {
     const {user} = useContext(userContext)
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(true);
-    const [newPost, setNewPost] = useState({
+    const [tempNewPost, setTempNewPost] = useState({
         title: '',
         content: ''
     })
     const onChange = ({target: {name, value}}) => {
-        setNewPost({...newPost, [name]: value})
+        setTempNewPost({...tempNewPost, [name]: value})
     };
-    const addNewPost = () => {
+    const handleEdit = () => {
         axios({
             method: 'post',
-            url: `${process.env.REACT_APP_API_URL}/post`,
+            url: 'http://localhost:8080/api/post',
             data: {
-                "title": newPost.title,
-                "content": newPost.content,
+                "title": tempNewPost.title,
+                "content": tempNewPost.content,
                 "userId": user.id
             }
         }).then((response) => {
-            dispatch(addPost({
-                id: response.data.id,
-                title: response.data.title,
-                content: response.data.content
-            }))
+            savePost(response)
         }).catch((error) => {
             alert("Create new post Error" + error)
         })
-        setNewPost({
+
+        setTempNewPost({
             title: '',
             content: ''
         })
@@ -47,8 +40,9 @@ const NewItem = () => {
     return (
         <div className="newItem">
             <Button variant="primary" className="newItem-add" onClick={handleShow}>+</Button>
-            <ModalWindow show={show} setShow={setShow} content={newPost.content} post={newPost}
-                         btnTitle={"Add"} onChange={onChange} handleEdit={addNewPost}/>
+            <ModalWindow show={show} setShow={setShow} content={tempNewPost.content} post={tempNewPost}
+                         btnTitle={"Add"} onChange={onChange} handleEdit={handleEdit}/>
+
         </div>
     );
 };

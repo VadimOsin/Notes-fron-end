@@ -5,110 +5,111 @@ import {userContext} from "../context/userContext";
 import axios from "axios";
 import {useState} from "react";
 import './CSS/ListItems.css'
+import NewItem from "./newItem";
 import ModalWindow from "./Modal";
-import {store} from "../store/store";
-import {putPost, getPost, deletePost} from '../store/actionCreators/postActionsCreator'
-import {useDispatch} from "react-redux";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 
+const ListItems = () => {
+    const {user, setUser} = useContext(userContext)
+    const [post, setPost] = useState([])
+    const [isMountRender, setMountRender] = useState(true);
 
-const ListItems = ({post}) => {
-        const [show, setShow] = useState(false);
-        const [tempPost, setTempPost] = useState({
-            id: '', title: '', content: ''
+    useEffect(() => {
+        axios({
+            method: 'get', url: `http://localhost:8080/api/post?id=${user.id}`,
+        }).then(function (response) {
+            setPost(response.data)
+        });
+
+    }, [isMountRender,]);
+
+    const deleteHandler = (id) => {
+        axios({
+            method: 'delete', url: `http://localhost:8080/api/post/${id}`,
+        }).then(() => {
+            const newList = post.filter((item) => item.id !== id);
+            setPost(newList)
+        }).catch(() => {
+            alert("Post delete error")
         })
-        const [query, setQuery] = useState("")
-        const {user} = useContext(userContext)
-        const dispatch = useDispatch();
-        const onChange = ({target: {name, value}}) => {
-            setTempPost({...tempPost, [name]: value})
-        };
-        const handleShow = (id) => {
-            setShow(true)
-            post.map((i) => {
-                if (i.id === id) {
-                    setTempPost({
-                        id: i.id,
-                        title: i.title,
-                        content: i.content
-                    })
-                }
-            })
 
-        };
-
-        useEffect(() => {
-            axios({
-                method: 'get', url: `${process.env.REACT_APP_API_URL}/post?id=${user.id}`,
-            }).then(function (response) {
-                dispatch(getPost(response.data))
-            });
-        }, []);
-
-        const deleteHandler = (id) => {
-            axios({
-                method: 'delete', url: `${process.env.REACT_APP_API_URL}/post/${id}`,
-            }).then(() => {
-                dispatch(deletePost(id))
-            }).catch(() => {
-                alert("Post delete error")
-            })
-        }
-
-        const putHandler = () => {
-            post.map((i) => {
-                if (i.id === tempPost.id) {
-                    if (i.title !== tempPost.title || i.content !== tempPost.content) {
-                        axios({
-                            method: 'put', url: `${process.env.REACT_APP_API_URL}/post`,
-                            data: {
-                                id: tempPost.id,
-                                title: tempPost.title,
-                                content: tempPost.content
-                            }
-                        }).then(() => {
-                            store.dispatch(putPost(tempPost))
-                        }).catch(() => {
-                            alert("Post update error")
-                        })
-                    }
-                }
-            })
-            setShow(false)
-        }
-
-        {
-            if (post.length) {
-                return (<>
-                    <Form className="d-flex listItems-search">
-                        <Form.Control
-                            type="search"
-                            placeholder="Search"
-                            aria-label="Search"
-                            onChange={event => setQuery(event.target.value)}
-                        />
-                        <Button variant="outline-success" className="listItems-search-btn">Search</Button>
-                    </Form>
-                    <div className="listItems">
-                        {post.filter(item => {
-                            if (query === '') {
-                                return item;
-                            } else if (item.title.toLowerCase().includes(query.toLowerCase())) {
-                                return item;
-                            }
-                        }).map((item) => {
-                            return <CardItem key={item.id} post={item}
-                                             deleteHandler={deleteHandler} handleShow={handleShow}/>
-                        })}
-                        <ModalWindow show={show} setShow={setShow} post={tempPost}
-                                     btnTitle={"Edit"} onChange={onChange} handleEdit={putHandler}/>
-                    </div>
-                </>);
-            } else return null;
-        }
     }
 
-;
+    const putHandler = () => {
+        post.map((i) => {
+            if (i.id === tempPost.id) {
+                if (i.title !== tempPost.title || i.content !== tempPost.content) {
+                    axios({
+                        method: 'put', url: `http://localhost:8080/api/post`,
+                        data: {
+                            id: tempPost.id,
+                            title: tempPost.title,
+                            content: tempPost.content
+                        }
+                    }).then(() => {
+                        const newList = post.map((item) => {
+                            if (item.id === tempPost.id) {
+                                const updatedItem = {
+                                    ...item,
+                                    id: tempPost.id,
+                                    title: tempPost.title,
+                                    content: tempPost.content
+                                };
+
+                                return updatedItem;
+                            }
+
+                            return item;
+                        });
+
+                        setPost(newList);
+                    }).catch(() => {
+                        alert("Post update error")
+                    })
+
+                }
+            }
+        })
+        setShow(false)
+    }
+    const [show, setShow] = useState(false);
+    const [tempPost, setTempPost] = useState({
+        id: '', title: '', content: ''
+    })
+    const onChange = ({target: {name, value}}) => {
+        setTempPost({...tempPost, [name]: value})
+    };
+    const handleShow = (id) => {
+        setShow(true)
+        post.map((i) => {
+            if (i.id === id) {
+                setTempPost({
+                    id: i.id,
+                    title: i.title,
+                    content: i.content
+                })
+            }
+        })
+
+    };
+
+    const savePost = (response) => {
+        setPost([...post, {
+            id: response.data.id,
+            title: response.data.title,
+            content: response.data.content
+        }])
+    }
+    return (<>
+        <div className="listItems">
+            {post.map((item) => {
+                return <CardItem id={item.id} key={item.id} title={item.title} content={item.content}
+                                 deleteHandler={deleteHandler} handleShow={handleShow}/>
+            })}
+            <ModalWindow show={show} setShow={setShow} post={tempPost}
+                         btnTitle={"Edit"} onChange={onChange} handleEdit={putHandler}/>
+        </div>
+        <NewItem savePost={savePost}/>
+    </>);
+};
 
 export default ListItems;
